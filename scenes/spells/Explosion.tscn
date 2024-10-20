@@ -1,9 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://to2yrxd6jer2"]
+[gd_scene load_steps=3 format=3 uid="uid://to2yrxd6jer2"]
+
+[ext_resource type="Script" path="res://scripts/spells/explosion.gd" id="1_0ii3i"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_3i5mr"]
 
 [node name="Explosion" type="Node2D"]
+script = ExtResource("1_0ii3i")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(50, 50)
 texture = SubResource("PlaceholderTexture2D_3i5mr")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
