@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://gr5nlveeoyvt"]
+[gd_scene load_steps=7 format=3 uid="uid://gr5nlveeoyvt"]
 
 [ext_resource type="Script" path="res://scripts/player/Player.gd" id="1_o72dl"]
 [ext_resource type="Texture2D" uid="uid://bxv36oxos7nwv" path="res://icon.svg" id="2_42duy"]
 [ext_resource type="Script" path="res://scripts/player/health_bar.gd" id="3_minbs"]
+[ext_resource type="Script" path="res://scripts/player/shield_bar.gd" id="4_bdm1n"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ahfd8"]
 radius = 75.0
@@ -25,17 +26,6 @@ texture = ExtResource("2_42duy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ahfd8")
-
-[node name="HealthBar" type="ProgressBar" parent="."]
-modulate = Color(0, 1, 0, 1)
-offset_left = -60.0
-offset_top = -100.0
-offset_right = 60.0
-offset_bottom = -73.0
-value = 100.0
-show_percentage = false
-script = ExtResource("3_minbs")
-metadata/_edit_use_anchors_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
@@ -61,3 +51,36 @@ offset_right = 60.0
 offset_bottom = -97.0
 text = "Player"
 horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -60.0
+offset_top = -100.0
+offset_right = 60.0
+offset_bottom = -80.0
+
+[node name="HealthBar" type="ProgressBar" parent="Control"]
+modulate = Color(0, 1, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+show_percentage = false
+script = ExtResource("3_minbs")
+metadata/_edit_use_anchors_ = true
+
+[node name="ShieldBar" type="ProgressBar" parent="Control"]
+self_modulate = Color(0, 1, 1, 0.686275)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+show_percentage = false
+script = ExtResource("4_bdm1n")
+metadata/_edit_use_anchors_ = true
