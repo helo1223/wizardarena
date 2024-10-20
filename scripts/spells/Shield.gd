@@ -1,6 +1,6 @@
 # Fireball.gd
 extends Spell
-
+class_name Shield
 # Preload the FireballProjectile scene
 var shield_scene: PackedScene = preload("res://scenes/spells/Shield.tscn")
 

@@ -1,8 +1,6 @@
 # ShopManager.gd
 extends Node
 
-const Fireball = preload("res://scripts/spells/Fireball.gd")
-const Shield = preload("res://scripts/spells/Shield.gd")
 # Example arrays of available spells and upgrades
 var available_spells: Array = [Fireball.new(), Shield.new()]
 var available_upgrades: Array = []

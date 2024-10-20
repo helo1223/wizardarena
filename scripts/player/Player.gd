@@ -6,7 +6,7 @@ class_name Player
 var health: int = 100
 var max_health: int = 100
 var movement_speed: float = 400.0
-var active_spells: Array[Spell] = [ShopManager.Fireball.new(), ShopManager.Shield.new()] # Array of active spell instances
+var active_spells: Array[Spell] = [Fireball.new(), Shield.new()] # Array of active spell instances
 var upgrades: Array[Upgrade] = []    # Array of upgrade instances
 
 # Cooldowns tracking

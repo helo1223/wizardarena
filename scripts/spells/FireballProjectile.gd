@@ -1,5 +1,6 @@
 # FireballProjectile.gd
 extends Area2D
+class_name FireballProjectile
 
 const EXPLOSION = preload("res://scenes/spells/Explosion.tscn")
 

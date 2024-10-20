@@ -1,4 +1,5 @@
 extends Area2D
+class_name ShieldEntity
 
 @export var health : float
 @export var lifetime : float
