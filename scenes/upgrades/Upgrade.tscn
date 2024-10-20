@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://dj6bimaggnpek"]
+
+[ext_resource type="Script" path="res://scripts/upgrades/UpgradeBase.gd" id="1_ecmmi"]
+
+[node name="Upgrade" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ecmmi")
+
+[node name="DescriptionLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

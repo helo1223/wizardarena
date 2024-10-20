@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://gr5nlveeoyvt"]
+
+[ext_resource type="Script" path="res://scripts/player/Player.gd" id="1_o72dl"]
+[ext_resource type="Texture2D" uid="uid://bxv36oxos7nwv" path="res://icon.svg" id="2_42duy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ahfd8"]
+radius = 75.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_py733"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_o72dl")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_42duy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ahfd8")
+
+[node name="SpellSlots" type="Node" parent="."]
+
+[node name="HealthBar" type="Node" parent="."]
+
+[node name="Upgrades" type="Node" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_py733")
