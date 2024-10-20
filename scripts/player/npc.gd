@@ -1,19 +1,7 @@
-extends CharacterBody2D
+extends Player
 
-@export var health : float = 100.0
-var max_health = health
-
-var active_spells: Array[Spell] = [Fireball.new()] # Array of active spell instances
-@onready var projectiles: Node = $Projectiles
-
-
-func take_damage(damage):
-    health -= damage
-    if health <= 0:
-        queue_free()
+func _ready() -> void:
+    pass
     
-func get_projectiles():
-    return $Projectiles
-
-func _on_timer_timeout() -> void:
-    pass#active_spells[0].cast(self, target.global_position)
+func _physics_process(delta: float) -> void:
+    update_shield_value()

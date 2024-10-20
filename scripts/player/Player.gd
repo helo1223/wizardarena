@@ -4,6 +4,7 @@ class_name Player
 
 # Player properties
 var health: int = 100
+var shield: int = 0
 var max_health: int = 100
 var movement_speed: float = 400.0
 var active_spells: Array[Spell] = [Fireball.new(), Shield.new()] # Array of active spell instances
@@ -43,6 +44,13 @@ func _physics_process(delta: float) -> void:
     handle_movement(delta)
     handle_spellcasting(delta)
     update_spell_cooldowns(delta)
+    update_shield_value()
+    
+func update_shield_value():
+    shield = 0
+    for spell in get_children():
+        if is_instance_of(spell, ShieldEntity):
+            shield += spell.health
  
 func handle_movement(delta: float) -> void:
     # Get the input direction using get_vector for up, down, left, right actions
