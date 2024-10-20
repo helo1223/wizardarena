@@ -18,3 +18,7 @@ func cast(caster: Node, target_position: Vector2):
 
 func apply_effect(target: Player):
     print(spell_name, " was applied to ", target.name)
+
+func add_projectile_to_level(projectile: Node):
+    var level = GameManager.current_level_node
+    level.get_node("Projectiles").add_child(projectile)

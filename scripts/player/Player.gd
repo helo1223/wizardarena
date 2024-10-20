@@ -23,11 +23,13 @@ var current_cast_time: float = 0.0
 var casting_time: float = 0.0
 
 @onready var casting_bar: ProgressBar = $CastingBar
+@onready var bar_control: Control = $BarControl
 
 @onready var camera: Camera2D = $Camera2D
 
 var player_name : String
 @onready var name_label: Label = $NameLabel
+
 
 # Signals
 signal health_changed(new_health)
@@ -36,12 +38,14 @@ func get_projectiles() -> Node:
     return $Projectiles
 
 func _ready() -> void:
+    bar_control.show()
     $CollisionShape2D.set_deferred("disabled", false)
-    camera.enabled = is_multiplayer_authority()
+    if camera:
+        camera.enabled = is_multiplayer_authority()
     name_label.text = player_name
     #init_default_spells()  # Assign initial spells here if needed
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
     if !is_multiplayer_authority():
         return
         
@@ -118,6 +122,7 @@ func die():
     $Sprite2D.animation = "death"
     $Sprite2D.play()
     $CollisionShape2D.set_deferred("disabled", true)
+    bar_control.hide()
     dead = true
     
 # Spell casting
@@ -195,7 +200,4 @@ func init_default_spells():
 
 func _on_sprite_2d_animation_finished() -> void:
     if $Sprite2D.animation == "death":
-        $DeathTimer.start()
-
-func _on_death_timer_timeout() -> void:
-    queue_free()
+        queue_free()

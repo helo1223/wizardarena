@@ -1,19 +1,114 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsop21pcfrgeh"]
+[gd_scene load_steps=18 format=3 uid="uid://bsop21pcfrgeh"]
 
 [ext_resource type="Script" path="res://scripts/player/npc.gd" id="1_5c5jy"]
-[ext_resource type="Texture2D" uid="uid://bxv36oxos7nwv" path="res://icon.svg" id="2_sipsw"]
+[ext_resource type="Texture2D" uid="uid://cn7k67pvu4fwb" path="res://assets/sprites/mage1.png" id="2_373rt"]
 [ext_resource type="Script" path="res://scripts/player/health_bar.gd" id="3_d4btg"]
 [ext_resource type="Script" path="res://scripts/player/shield_bar.gd" id="4_14ucm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_058uw"]
+atlas = ExtResource("2_373rt")
+region = Rect2(0, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g1e6u"]
+atlas = ExtResource("2_373rt")
+region = Rect2(64, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_obg4u"]
+atlas = ExtResource("2_373rt")
+region = Rect2(128, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_myl2j"]
+atlas = ExtResource("2_373rt")
+region = Rect2(192, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rowi6"]
+atlas = ExtResource("2_373rt")
+region = Rect2(256, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45olv"]
+atlas = ExtResource("2_373rt")
+region = Rect2(320, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wttk2"]
+atlas = ExtResource("2_373rt")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0rluf"]
+atlas = ExtResource("2_373rt")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70c06"]
+atlas = ExtResource("2_373rt")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dr2ap"]
+atlas = ExtResource("2_373rt")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_48sln"]
+atlas = ExtResource("2_373rt")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xbla4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_058uw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g1e6u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_obg4u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_myl2j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rowi6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45olv")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wttk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0rluf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70c06")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dr2ap")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_48sln")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ahfd8"]
 radius = 75.0
 
 [node name="NPC" type="CharacterBody2D"]
 modulate = Color(1, 0.192157, 0.137255, 1)
+texture_filter = 1
 script = ExtResource("1_5c5jy")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_sipsw")
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -30)
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_xbla4")
+animation = &"death"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ahfd8")
@@ -25,14 +120,15 @@ autostart = true
 
 [node name="Projectiles" type="Node" parent="."]
 
-[node name="Control" type="Control" parent="."]
+[node name="BarControl" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="HealthBar" type="ProgressBar" parent="Control"]
+[node name="HealthBar" type="ProgressBar" parent="BarControl"]
 modulate = Color(0, 1, 0, 1)
+layout_mode = 0
 offset_left = -60.0
 offset_top = -100.0
 offset_right = 60.0
@@ -42,8 +138,9 @@ show_percentage = false
 script = ExtResource("3_d4btg")
 metadata/_edit_use_anchors_ = true
 
-[node name="ShieldBar" type="ProgressBar" parent="Control"]
+[node name="ShieldBar" type="ProgressBar" parent="BarControl"]
 modulate = Color(0, 1, 0, 1)
+layout_mode = 0
 offset_left = -60.0
 offset_top = -100.0
 offset_right = 60.0
@@ -52,5 +149,24 @@ value = 100.0
 show_percentage = false
 script = ExtResource("4_14ucm")
 metadata/_edit_use_anchors_ = true
+
+[node name="CastingBar" type="ProgressBar" parent="."]
+visible = false
+offset_left = -60.0
+offset_top = -150.0
+offset_right = 60.0
+offset_bottom = -123.0
+
+[node name="CastingTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="NameLabel" type="Label" parent="."]
+visible = false
+offset_left = -60.0
+offset_top = -120.0
+offset_right = 60.0
+offset_bottom = -97.0
+text = "Player"
+horizontal_alignment = 1
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -53,7 +53,8 @@ func explode():
     if explosion_effect:
         var explosion_instance = explosion_effect.instantiate()
         explosion_instance.global_position = global_position
-        caster.get_projectiles().add_child(explosion_instance)
+        var current_level_projectiles = GameManager.current_level_node.get_node("Projectiles")
+        current_level_projectiles.add_child(explosion_instance)
 
 
 func _on_lifetime_timeout() -> void:

@@ -23,4 +23,4 @@ func cast(caster: Node, target_position: Vector2):
     fireball_projectile.damage = damage  # Set the damage based on the spell's power
     
     # Add the fireball to the scene
-    caster.get_projectiles().add_child(fireball_projectile)
+    add_projectile_to_level(fireball_projectile)

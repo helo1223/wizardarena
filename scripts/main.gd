@@ -8,6 +8,7 @@ func _ready() -> void:
     
 func spawn_level(data):
     var a = (load(data) as PackedScene).instantiate()
+    GameManager.set_current_level(a)
     return a
 
 func _on_host_pressed() -> void:

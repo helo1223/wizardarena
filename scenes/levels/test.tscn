@@ -24,3 +24,5 @@ position = Vector2(649, -10)
 [node name="Shield" parent="NPC" instance=ExtResource("4_hota2")]
 health = 100.0
 lifetime = 10000.0
+
+[node name="Projectiles" type="Node" parent="."]
