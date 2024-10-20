@@ -11,6 +11,8 @@ var target_player
 func _ready() -> void:
     lifetime_timer.wait_time = lifetime
     lifetime_timer.start()
+    if target_player == null:
+        target_player = get_parent()
 
 func _on_lifetime_timeout() -> void:
     queue_free()
