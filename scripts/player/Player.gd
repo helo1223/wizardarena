@@ -3,12 +3,14 @@ class_name Player
 
 
 # Player properties
-var health: float = 80.0
+var health: float = 100.0
 var shield: float = 0.0
-var max_health: float = 100.0
+var max_health: float = health
 var movement_speed: float = 500.0
 var active_spells: Array[Spell] = [Fireball.new(), Shield.new()] # Array of active spell instances
 var upgrades: Array[Upgrade] = []    # Array of upgrade instances
+
+var dead : bool = false
 
 # Cooldowns tracking
 var spell_cooldowns: Dictionary = {}
@@ -34,6 +36,7 @@ func get_projectiles() -> Node:
     return $Projectiles
 
 func _ready() -> void:
+    $CollisionShape2D.set_deferred("disabled", false)
     camera.enabled = is_multiplayer_authority()
     name_label.text = player_name
     #init_default_spells()  # Assign initial spells here if needed
@@ -41,11 +44,16 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
     if !is_multiplayer_authority():
         return
-    handle_movement(delta)
-    handle_camera_zoom()
-    handle_spellcasting(delta)
+        
+    if not dead:
+        handle_movement(delta)
+        handle_spellcasting(delta)
+        handle_anim()
+     
     update_spell_cooldowns(delta)
     update_shield_value()
+    handle_camera_zoom()
+
     
 func update_shield_value():
     shield = 0
@@ -67,6 +75,17 @@ func handle_movement(delta: float) -> void:
     velocity = input_direction * movement_speed
     # Move the character
     move_and_slide()
+    
+func handle_anim():
+    var current_anim = $Sprite2D.animation
+    if velocity != Vector2.ZERO:
+        if velocity < Vector2.ZERO:
+            $Sprite2D.speed_scale = -1
+        else:
+            $Sprite2D.speed_scale = 1
+        $Sprite2D.animation = "run"
+    else:
+        $Sprite2D.animation = "idle"
 
 func handle_spellcasting(delta: float) -> void:
     if casting:
@@ -87,13 +106,19 @@ func handle_spellcasting(delta: float) -> void:
 
 # Method to handle receiving damage
 func take_damage(amount: int):
-    health -= amount
-    emit_signal("health_changed", health)
-    if health <= 0:
-        die()
+    if not dead:
+        health -= amount
+        emit_signal("health_changed", health)
+        if health <= 0:
+            die()
         
 func die():
-    queue_free()  # Replace with death logic
+    $Sprite2D.stop()
+    $Sprite2D.speed_scale = 1
+    $Sprite2D.animation = "death"
+    $Sprite2D.play()
+    $CollisionShape2D.set_deferred("disabled", true)
+    dead = true
     
 # Spell casting
 func cast_spell(spell_index: int):
@@ -166,3 +191,11 @@ func init_default_spells():
     for spell in ShopManager.offer_random_spells():
         print("Init spell: ", spell.spell_name)
         active_spells.append(spell)
+
+
+func _on_sprite_2d_animation_finished() -> void:
+    if $Sprite2D.animation == "death":
+        $DeathTimer.start()
+
+func _on_death_timer_timeout() -> void:
+    queue_free()
