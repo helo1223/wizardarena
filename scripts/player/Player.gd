@@ -6,7 +6,7 @@ class_name Player
 var health: int = 100
 var shield: int = 0
 var max_health: int = 100
-var movement_speed: float = 400.0
+var movement_speed: float = 500.0
 var active_spells: Array[Spell] = [Fireball.new(), Shield.new()] # Array of active spell instances
 var upgrades: Array[Upgrade] = []    # Array of upgrade instances
 
@@ -42,6 +42,7 @@ func _physics_process(delta: float) -> void:
     if !is_multiplayer_authority():
         return
     handle_movement(delta)
+    handle_camera_zoom()
     handle_spellcasting(delta)
     update_spell_cooldowns(delta)
     update_shield_value()
@@ -52,6 +53,13 @@ func update_shield_value():
         if is_instance_of(spell, ShieldEntity):
             shield += spell.health
  
+func handle_camera_zoom() -> void:
+    if Input.is_action_just_pressed("zoom_in"):
+        camera.zoom += Vector2(0.1,0.1)
+    elif Input.is_action_just_pressed("zoom_out"):
+        camera.zoom -= Vector2(0.1,0.1)
+
+
 func handle_movement(delta: float) -> void:
     # Get the input direction using get_vector for up, down, left, right actions
     var input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
