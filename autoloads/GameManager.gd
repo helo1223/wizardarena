@@ -2,6 +2,7 @@ extends Node
 
 # Game States
 enum GameState {
+    MENU,
     ROUND_PREPARE,
     ROUND_ACTIVE,
     ROUND_END,
@@ -16,11 +17,17 @@ var team_size = 2
 var state_timer: Timer
 
 # Variables for tracking the game state
-var current_state: GameState = GameState.ROUND_PREPARE
-var current_round: int = 1
+var current_state: GameState = GameState.MENU
+var current_round: int = 0
 var max_rounds: int = 5
 
 var current_level_node : Node
+
+var prepare_time : int = 1
+var round_end_time : int = 3
+var shop_break_time : int = 1
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -29,6 +36,7 @@ func _ready() -> void:
 
 # Called at the start of each round to reset player stats and arena
 func prepare_next_round():
+    current_round += 1
     if state_timer.is_connected("timeout", prepare_next_round):
         state_timer.disconnect("timeout", prepare_next_round)        
     print("Preparing next round")
@@ -36,7 +44,7 @@ func prepare_next_round():
     reset_players()  # Resets health, positions, etc.
     reset_arena()
     create_teams()
-    state_timer.start(5)  # Give 5 seconds for prep before the round starts
+    state_timer.start(prepare_time)  # Give 5 seconds for prep before the round starts
     state_timer.connect("timeout", _start_round)
 
 func create_teams():
@@ -89,7 +97,7 @@ func end_round(winning_team: int):
 
     # Start the shop break or next round
     if current_round < max_rounds:
-        state_timer.start(10)  # 10 second break before shop
+        state_timer.start(round_end_time)  # 10 second break before shop
         state_timer.connect("timeout", _start_shop_break)
     else:
         declare_game_winner()
@@ -104,7 +112,7 @@ func _start_shop_break():
     enable_shop_ui_for_players()
     state_timer.stop()  # Stop any previous timers
     # After the shop break, transition to the next round
-    state_timer.start(15)  # 15 seconds for the shop break
+    state_timer.start(shop_break_time)  # 15 seconds for the shop break
     state_timer.connect("timeout", prepare_next_round)
 
 # Give rewards to players after winning a round

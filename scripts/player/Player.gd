@@ -37,6 +37,9 @@ var input_enabled : bool = false
 
 @onready var sprite: AnimatedSprite2D = $Sprite2D
 
+
+@onready var debug_label: Label = $Camera2D/DebugControl/DebugLabel
+
 # Signals
 signal health_changed(new_health)
 
@@ -61,6 +64,10 @@ func _process(delta: float) -> void:
     update_spell_cooldowns(delta)
     update_shield_value()
     handle_camera_zoom()
+    
+    if is_player():
+        var text = "STATE: " + GameManager.GameState.keys()[GameManager.current_state] + "\n" + "ROUND: " + str(GameManager.current_round) + "\n" + "TIMELEFT: " + str(int(GameManager.state_timer.time_left))
+        debug_label.text = text
 
     
 func update_shield_value():
@@ -127,6 +134,7 @@ func die():
     $CollisionShape2D.set_deferred("disabled", true)
     bar_control.hide()
     dead = true
+    name_label.hide()
     
 # Spell casting
 func cast_spell(spell_index: int):
@@ -209,7 +217,6 @@ func _on_sprite_2d_animation_finished() -> void:
     if sprite.animation == "death":
         sprite.stop()
         sprite.frame = sprite.sprite_frames.get_frame_count(sprite.animation)
-        name_label.hide()
 
 func reset_for_round():
     name_label.show()

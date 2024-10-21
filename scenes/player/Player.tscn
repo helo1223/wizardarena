@@ -173,6 +173,18 @@ script = ExtResource("1_o72dl")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
+[node name="DebugControl" type="Control" parent="Camera2D"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DebugLabel" type="Label" parent="Camera2D/DebugControl"]
+offset_left = -542.0
+offset_top = -294.0
+offset_right = -502.0
+offset_bottom = -271.0
+
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -30)
 scale = Vector2(5, 5)
