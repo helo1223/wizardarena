@@ -14,6 +14,7 @@ func spawn_level(data):
 func _on_host_pressed() -> void:
     Network.create_lobby()
     multiplayer_spawner.spawn("res://scenes/levels/test.tscn")
+    GameManager.prepare_next_round()
     $Camera2D.enabled = false
     $Host.hide()
     $Join.hide()

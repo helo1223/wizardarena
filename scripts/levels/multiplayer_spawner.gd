@@ -11,13 +11,14 @@ func _ready() -> void:
 
 var players = {}
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func spawn_player(data):
     var p = player_scene.instantiate()
     p.set_multiplayer_authority(data)
     players[data] = p
+    GameManager.players[data] = p 
     return p
     
 func remove_player(data):
     players[data].queue_free()
     players.erase(data)
+    GameManager.players.erase(data)

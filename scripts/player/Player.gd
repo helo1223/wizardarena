@@ -12,6 +12,9 @@ var upgrades: Array[Upgrade] = []    # Array of upgrade instances
 
 var dead : bool = false
 
+var spawn_point = Vector2(0.0, 0.0)
+
+
 # Cooldowns tracking
 var spell_cooldowns: Dictionary = {}
 
@@ -27,9 +30,12 @@ var casting_time: float = 0.0
 
 @onready var camera: Camera2D = $Camera2D
 
-var player_name : String
+var player_name : String = Steam.getPersonaName()
 @onready var name_label: Label = $NameLabel
 
+var input_enabled : bool = false
+
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 
 # Signals
 signal health_changed(new_health)
@@ -38,20 +44,18 @@ func get_projectiles() -> Node:
     return $Projectiles
 
 func _ready() -> void:
-    bar_control.show()
-    $CollisionShape2D.set_deferred("disabled", false)
-    if camera:
+    if is_player():
         camera.enabled = is_multiplayer_authority()
     name_label.text = player_name
-    #init_default_spells()  # Assign initial spells here if needed
 
 func _process(delta: float) -> void:
     if !is_multiplayer_authority():
         return
         
     if not dead:
-        handle_movement(delta)
-        handle_spellcasting(delta)
+        if input_enabled and is_player():
+            handle_movement(delta)
+            handle_spellcasting(delta)
         handle_anim()
      
     update_spell_cooldowns(delta)
@@ -81,15 +85,14 @@ func handle_movement(delta: float) -> void:
     move_and_slide()
     
 func handle_anim():
-    var current_anim = $Sprite2D.animation
     if velocity != Vector2.ZERO:
         if velocity < Vector2.ZERO:
-            $Sprite2D.speed_scale = -1
+            sprite.speed_scale = -1
         else:
-            $Sprite2D.speed_scale = 1
-        $Sprite2D.animation = "run"
+            sprite.speed_scale = 1
+        sprite.animation = "run"
     else:
-        $Sprite2D.animation = "idle"
+        sprite.animation = "idle"
 
 func handle_spellcasting(delta: float) -> void:
     if casting:
@@ -117,10 +120,10 @@ func take_damage(amount: int):
             die()
         
 func die():
-    $Sprite2D.stop()
-    $Sprite2D.speed_scale = 1
-    $Sprite2D.animation = "death"
-    $Sprite2D.play()
+    sprite.stop()
+    sprite.speed_scale = 1
+    sprite.animation = "death"
+    sprite.play()
     $CollisionShape2D.set_deferred("disabled", true)
     bar_control.hide()
     dead = true
@@ -185,6 +188,10 @@ func update_spell_cooldowns(delta: float):
         spell_cooldowns[spell] -= delta
         if spell_cooldowns[spell] <= 0:
             spell_cooldowns[spell] = 0  
+            
+func reset_cooldowns():
+    for spell in spell_cooldowns:
+        spell_cooldowns[spell] = 0
     
 # Apply upgrades, affecting player stats
 func apply_upgrade(upgrade: Upgrade):
@@ -199,5 +206,29 @@ func init_default_spells():
 
 
 func _on_sprite_2d_animation_finished() -> void:
-    if $Sprite2D.animation == "death":
-        queue_free()
+    if sprite.animation == "death":
+        sprite.stop()
+        sprite.frame = sprite.sprite_frames.get_frame_count(sprite.animation)
+        name_label.hide()
+
+func reset_for_round():
+    name_label.show()
+    sprite.play()
+    bar_control.show()
+    $CollisionShape2D.set_deferred("disabled", false)
+    dead = false
+    health = max_health
+    global_position = spawn_point # Reset to a starting position
+    reset_cooldowns()  # Reset cooldowns for spells
+
+func start_fighting():
+    input_enabled = true  # Enable player input
+
+func stop_fighting():
+    input_enabled = false  # Disable player input
+
+func add_rewards():
+    pass
+
+func is_player():
+    return not is_instance_of(self, NPC)
